@@ -51,16 +51,19 @@ export interface DbPromo {
   company_id: string; // Foreign Key to DbCompany
   code: string;
   headline: string;
+  description: string;
   link: string | null;
   added_at: string;
   expires_at: string | null; 
   is_verified: boolean; 
+
 }
 
 export type PromoDisplayModel = {
   id: string;
   code: string;
   headline: string;
+  description: string;
   link: string | null;
   expiresAt: Date | null;
   isVerified: boolean;

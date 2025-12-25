@@ -8,6 +8,7 @@ export const mockPromos: PromoDisplayModel[] = [
     link: "https://dbrand.com/mkbhd",
     expiresAt: new Date("2025-03-01"),
     isVerified: true,
+    description: "Get 20% off your first order",
     company: {
       name: "dbrand",
       logoURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Dbrand_logo.svg/512px-Dbrand_logo.svg.png",
@@ -33,6 +34,7 @@ export const mockPromos: PromoDisplayModel[] = [
     link: "https://nordvpn.com/pewdiepie",
     expiresAt: null,
     isVerified: true,
+    description: "Free 30-day trial + 3 months free",
     company: {
       name: "NordVPN",
       logoURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/NordVPN-logo.svg/512px-NordVPN-logo.svg.png",
@@ -58,6 +60,7 @@ export const mockPromos: PromoDisplayModel[] = [
     link: null,
     expiresAt: new Date("2025-01-15"),
     isVerified: true,
+    description: "15% off all palettes",
     company: {
       name: "Morphe",
       logoURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Morphe_logo.svg/512px-Morphe_logo.svg.png",
@@ -83,6 +86,7 @@ export const mockPromos: PromoDisplayModel[] = [
     link: "https://squarespace.com/linus",
     expiresAt: null,
     isVerified: true,
+    description: "Build your website free for 14 days",
     company: {
       name: "Squarespace",
       logoURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Squarespace_logo_2019.svg/512px-Squarespace_logo_2019.svg.png",
@@ -108,6 +112,7 @@ export const mockPromos: PromoDisplayModel[] = [
     link: "https://hellofresh.com/bingingwithbabish",
     expiresAt: new Date("2025-02-28"),
     isVerified: true,
+    description: "$50 off your first HelloFresh box",
     company: {
       name: "HelloFresh",
       logoURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/HelloFresh_Logo.svg/512px-HelloFresh_Logo.svg.png",
@@ -133,6 +138,7 @@ export const mockPromos: PromoDisplayModel[] = [
     link: null,
     expiresAt: new Date("2025-04-01"),
     isVerified: false,
+    description: "25% off first purchase",
     company: {
       name: "Chamberlain Coffee",
       logoURL: "https://images.squarespace-cdn.com/content/v1/5f5e8592db4a007e0d84e556/1600118679906-chamberlain-coffee-logo.png",
@@ -158,6 +164,7 @@ export const mockPromos: PromoDisplayModel[] = [
     link: null,
     expiresAt: null,
     isVerified: true,
+    description: "Free shipping on orders over $50",
     company: {
       name: "Feastables",
       logoURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Feastables_logo.svg/512px-Feastables_logo.svg.png",
@@ -183,6 +190,7 @@ export const mockPromos: PromoDisplayModel[] = [
     link: "https://gfuel.com/ninja",
     expiresAt: new Date("2025-06-01"),
     isVerified: true,
+    description: "Get $5 off your first G FUEL tub",
     company: {
       name: "G FUEL",
       logoURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/G_Fuel_logo.svg/512px-G_Fuel_logo.svg.png",
@@ -208,6 +216,7 @@ export const mockPromos: PromoDisplayModel[] = [
     link: null,
     expiresAt: new Date("2025-01-31"),
     isVerified: true,
+    description: "10% off sitewide",
     company: {
       name: "Fashion Nova",
       logoURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Fashion_Nova_logo.svg/512px-Fashion_Nova_logo.svg.png",
@@ -233,6 +242,7 @@ export const mockPromos: PromoDisplayModel[] = [
     link: "https://brilliant.org/gametheory",
     expiresAt: null,
     isVerified: true,
+    description: "First month free on annual plan",
     company: {
       name: "Brilliant",
       logoURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Brilliant_%28website%29_Logo.svg/512px-Brilliant_%28website%29_Logo.svg.png",

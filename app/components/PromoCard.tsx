@@ -22,10 +22,9 @@ export function PromoCard({ promo, onClick }: PromoCardProps) {
   const handleLinkClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
-
   // Get the link - promo link takes priority, fallback to company link
   const promoLink = promo.link || promo.company.link;
-
+  const logoURL = "https://img.logo.dev/name/" + promo.company.name.toLowerCase().replaceAll(" ", "") + "?token=pk_Qd7P2EDxSA2ZhTsPA52CaA"
   return (
     <div
       onClick={() => onClick?.(promo)}
@@ -40,10 +39,10 @@ export function PromoCard({ promo, onClick }: PromoCardProps) {
 
       {/* Top section: Company info */}
       <div className="mb-4 flex items-center gap-3">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white/10 p-2">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white/10 p-1">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={promo.company.logoURL}
+            src={logoURL}
             alt={`${promo.company.name} logo`}
             className="h-full w-full object-contain"
             onError={(e) => {
@@ -56,7 +55,7 @@ export function PromoCard({ promo, onClick }: PromoCardProps) {
         </div>
         <div className="min-w-0 flex-1">
           <h3 className="truncate text-lg font-semibold text-text-primary group-hover:text-accent-primary transition-colors">
-            {promo.company.name}
+             {promo.company.name}
           </h3>
           <p className="text-sm text-text-muted capitalize">
             {promo.company.productType}

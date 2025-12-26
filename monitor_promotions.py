@@ -17,6 +17,7 @@ DB_PARAMS = {
     "port": "6543",
     "connect_timeout": 10,
     "sslmode": "require"
+    "pool_mode": "transaction"
 }
 
 # Initialize OpenAI client

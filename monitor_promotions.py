@@ -14,7 +14,8 @@ DB_PARAMS = {
     "password": os.environ["DB_PASSWORD"],
     "host": os.environ["DB_HOST"],
     "port": "5432",
-    "connect_timeout": 10
+    "connect_timeout": 10,
+    "sslmode": "require"  # Required for Supabase
 }
 
 # Initialize OpenAI client

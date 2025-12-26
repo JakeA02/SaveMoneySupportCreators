@@ -88,6 +88,8 @@ Rules:
 - Exclude: Affiliate links without codes, storefronts (Amazon/Linktree), affiliate codes (e.g for in-game purchases), sales, or non-discounted products.
 - If no deals exist, return an empty list for "deals".
 - If no code is explicitly mentioned, try to infer it from the url. If you cannot infer it, leave the code as an empty string.
+- The headline is a short, catchy title for the deal, like "10% off at Lululemon". 
+- The description is a slightly longer description of the deal, like "Get 10% off your purchase at Lululemon when you use the code 'LULESAVE' at checkout."
 - Return ONLY JSON."""
 
 JSON_SCHEMA = {

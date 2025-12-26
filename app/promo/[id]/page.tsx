@@ -156,7 +156,7 @@ export default async function PromoPage({ params }: PageProps) {
           <div className="rounded-2xl border border-border-subtle bg-bg-surface p-6">
             <div className="flex flex-col items-center gap-4 sm:flex-row">
               {/* Creator avatar */}
-              <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-accent-primary/20 to-accent-success/20">
+              <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-accent-primary/20 to-accent-success/20">
                 <span className="text-3xl font-bold text-accent-primary">
                   {promo.video.creator.name.charAt(0)}
                 </span>

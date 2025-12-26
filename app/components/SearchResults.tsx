@@ -46,6 +46,9 @@ export function SearchResults({ promos, query, onPromoClick }: SearchResultsProp
           <p className="mt-1 text-sm text-text-muted">
             {promos.length} {promos.length === 1 ? "code" : "codes"} found
           </p>
+          <p className="mt-4 text-xs text-text-muted">
+            Click on a card to view the details and source of the deal.
+          </p>
         </div>
 
         {/* View Toggle */}

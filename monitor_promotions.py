@@ -90,6 +90,7 @@ Rules:
 - If no code is explicitly mentioned, try to infer it from the url. If you cannot infer it with relative certainty, leave the code as an empty string.
 - The headline is a short, catchy title for the deal, like "10% off at Lululemon". 
 - The description is a slightly longer description of the deal, like "Get 10% off your purchase at Lululemon when you use the code 'LULESAVE' at checkout."
+- Regardless of the language of the video, the headline and description should be in English.
 - Return ONLY JSON."""
 
 JSON_SCHEMA = {

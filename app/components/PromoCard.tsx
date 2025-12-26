@@ -25,6 +25,9 @@ export function PromoCard({ promo, onClick }: PromoCardProps) {
   // Get the link - promo link takes priority, fallback to company link
   const promoLink = promo.link || promo.company.link;
   const logoURL = "https://img.logo.dev/name/" + promo.company.name.toLowerCase().replaceAll(" ", "") + "?token=pk_Qd7P2EDxSA2ZhTsPA52CaA"
+  
+  // Check if code is valid (not empty, null, space, or "Not Provided")
+  const hasValidCode = promo.code && promo.code.trim() !== "" && promo.code.trim().toLowerCase() !== "not provided" && promo.code.trim().toLowerCase() !== "n/a";
   return (
     <div
       onClick={() => onClick?.(promo)}
@@ -68,29 +71,43 @@ export function PromoCard({ promo, onClick }: PromoCardProps) {
         {promo.headline}
       </p>
 
-      {/* Code display with copy button */}
-      <div className="mb-4 flex items-center justify-between rounded-lg bg-bg-deep/50 px-4 py-3 border border-border-subtle">
-        <code className="text-lg font-mono font-bold tracking-wider text-accent-primary">
-          {promo.code}
-        </code>
-        <button
-          onClick={handleCopy}
-          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-text-muted transition-all hover:bg-accent-primary/10 hover:text-accent-primary"
-          title="Copy code"
-        >
-          {copied ? (
-            <>
-              <CheckCircleIcon className="h-4 w-4 text-accent-success" />
-              <span className="text-xs text-accent-success">Copied!</span>
-            </>
-          ) : (
-            <>
-              <CopyIcon className="h-4 w-4" />
-              <span className="text-xs">Copy</span>
-            </>
-          )}
-        </button>
-      </div>
+      {/* Code display with copy button OR Go to Deal link */}
+      {hasValidCode ? (
+        <div className="mb-4 flex items-center justify-between rounded-lg bg-bg-deep/50 px-4 py-3 border border-border-subtle">
+          <code className="text-lg font-mono font-bold tracking-wider text-accent-primary">
+            {promo.code}
+          </code>
+          <button
+            onClick={handleCopy}
+            className="flex items-center gap-1.5 rounded-md px-2 py-1 text-text-muted transition-all hover:bg-accent-primary/10 hover:text-accent-primary"
+            title="Copy code"
+          >
+            {copied ? (
+              <>
+                <CheckCircleIcon className="h-4 w-4 text-accent-success" />
+                <span className="text-xs text-accent-success">Copied!</span>
+              </>
+            ) : (
+              <>
+                <CopyIcon className="h-4 w-4" />
+                <span className="text-xs">Copy</span>
+              </>
+            )}
+          </button>
+        </div>
+      ) : promoLink ? (
+        <div className="mb-4 flex items-center justify-center rounded-lg bg-bg-deep/50 px-4 py-3 border border-border-subtle">
+          <a
+            href={promoLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={handleLinkClick}
+            className="text-lg font-semibold text-accent-primary underline underline-offset-4 transition-colors hover:text-accent-primary/80"
+          >
+            Go to Deal →
+          </a>
+        </div>
+      ) : null}
 
       {/* Footer: Creator & Link */}
       <div className="flex items-center justify-between text-xs">

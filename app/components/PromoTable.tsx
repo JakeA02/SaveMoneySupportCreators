@@ -54,6 +54,8 @@ export function PromoTable({ promos, onRowClick }: PromoTableProps) {
               // Get the link - promo link takes priority, fallback to company link
               const promoLink = promo.link || promo.company.link;
               const hasValidCode = promo.code && promo.code.trim() !== "" && promo.code.trim().toLowerCase() !== "not provided" && promo.code.trim().toLowerCase() !== "n/a" && !promo.code.trim().includes(" ");
+              const logoURL = "https://img.logo.dev/name/" + promo.company.name.toLowerCase().replaceAll(" ", "") + "?token=pk_Qd7P2EDxSA2ZhTsPA52CaA"
+
 
 
               return (
@@ -68,7 +70,7 @@ export function PromoTable({ promos, onRowClick }: PromoTableProps) {
                       <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-md bg-white/10 p-1">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                          src={promo.company.logoURL}
+                          src={logoURL}
                           alt={promo.company.name}
                           className="h-full w-full object-contain"
                           onError={(e) => {

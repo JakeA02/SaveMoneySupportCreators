@@ -99,7 +99,7 @@ export function SearchPageClient({ initialPromos, initialQuery }: SearchPageClie
       <footer className="border-t border-border-subtle bg-bg-surface/30">
         <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
           <p className="text-center text-xs text-text-muted/50">
-            Promo codes sourced from YouTube video descriptions. Click a card for details or use the copy button.
+            Promo codes sourced from YouTube videos. Click a deal card for details or use the copy button.
           </p>
         </div>
       </footer>

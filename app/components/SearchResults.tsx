@@ -47,7 +47,7 @@ export function SearchResults({ promos, query, onPromoClick }: SearchResultsProp
             {promos.length} {promos.length === 1 ? "code" : "codes"} found
           </p>
           <p className="mt-4 text-xs text-text-muted">
-            Click on a card to view the details and source of the deal.
+            Click on a deal card to view the details and source of the deal.
           </p>
         </div>
 

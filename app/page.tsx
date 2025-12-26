@@ -147,7 +147,7 @@ export default function Home() {
         {/* Footer hint */}
         <div className="absolute bottom-8 left-0 right-0 text-center">
           <p className="text-xs text-text-muted/50">
-            Codes sourced directly from YouTube video descriptions
+            Codes sourced directly from YouTube videos
           </p>
         </div>
       </main>

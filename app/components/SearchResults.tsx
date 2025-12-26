@@ -44,7 +44,7 @@ export function SearchResults({ promos, query, onPromoClick }: SearchResultsProp
             )}
           </h2>
           <p className="mt-1 text-sm text-text-muted">
-            {promos.length} {promos.length === 1 ? "code" : "codes"} found
+            {promos.length} {promos.length === 1 ? "code" : "codes"} found {promos.length === 50 ? "(maximum)" : ""}
           </p>
           <p className="mt-4 text-xs text-text-muted">
             Click on a deal card to view the details and source of the deal.

@@ -119,39 +119,98 @@ export async function getPromoById(id: string): Promise<PromoDisplayModel | null
 export async function searchPromos(query: string): Promise<PromoDisplayModel[]> {
   const supabase = await createClient();
 
-  // 1. Search deals
-  const { data: deals, error: dealsError } = await supabase
-    .from('deals')
-    .select('id, video_id, channel_id, headline, code, company, category, description, link')
-    .or(`company.ilike.%${query}%,code.ilike.%${query}%,headline.ilike.%${query}%,category.ilike.%${query}%`)
-    .order('id', { ascending: false })
-    .limit(50);
+  // Normalize query: remove spaces and special chars for fuzzy matching
+  // e.g., "Better Help" -> "betterhelp" to match "BetterHelp"
+  const normalizedQuery = query.replace(/[\s\-_\.]+/g, '').toLowerCase();
+  const originalQuery = query.trim();
 
-  if (dealsError || !deals) {
+  // Build search conditions for deals
+  const searchConditions: string[] = [
+    `company.ilike.%${originalQuery}%`,
+    `code.ilike.%${originalQuery}%`,
+    `headline.ilike.%${originalQuery}%`,
+    `category.ilike.%${originalQuery}%`
+  ];
+
+  if (normalizedQuery !== originalQuery.toLowerCase()) {
+    searchConditions.push(
+      `company.ilike.%${normalizedQuery}%`,
+      `code.ilike.%${normalizedQuery}%`
+    );
+  }
+
+  // 1. Run creator search and deal column search in parallel
+  const [{ data: matchingCreators }, { data: dealsByColumns, error: dealsError }] = await Promise.all([
+    supabase
+      .from('creators')
+      .select('channel_id')
+      .or(`creator_name.ilike.%${originalQuery}%,creator_username.ilike.%${originalQuery}%`),
+    supabase
+      .from('deals')
+      .select('id, video_id, channel_id, headline, code, company, category, description, link')
+      .or(searchConditions.join(','))
+      .order('id', { ascending: false })
+      .limit(50)
+  ]);
+
+  if (dealsError) {
     console.error('Error searching deals:', dealsError);
+  }
+
+  const matchingCreatorChannelIds = (matchingCreators || []).map(c => c.channel_id);
+
+  // 2. Search deals by matching creator channel_ids (if any creators matched)
+  let dealsByCreator: typeof dealsByColumns = [];
+  if (matchingCreatorChannelIds.length > 0) {
+    const { data: creatorDeals, error: creatorDealsError } = await supabase
+      .from('deals')
+      .select('id, video_id, channel_id, headline, code, company, category, description, link')
+      .in('channel_id', matchingCreatorChannelIds)
+      .order('id', { ascending: false })
+      .limit(50);
+
+    if (creatorDealsError) {
+      console.error('Error searching deals by creator:', creatorDealsError);
+    } else {
+      dealsByCreator = creatorDeals || [];
+    }
+  }
+
+  // 3. Combine and deduplicate results
+  const seenIds = new Set<number>();
+  const allDeals: typeof dealsByColumns = [];
+
+  for (const deal of [...(dealsByColumns || []), ...dealsByCreator]) {
+    if (!seenIds.has(deal.id)) {
+      seenIds.add(deal.id);
+      allDeals.push(deal);
+    }
+  }
+
+  if (allDeals.length === 0) {
     return [];
   }
 
-  // 2. Get unique video_ids and channel_ids
-  const videoIds = [...new Set(deals.map(d => d.video_id).filter(Boolean))];
-  const channelIds = [...new Set(deals.map(d => d.channel_id).filter(Boolean))];
+  // 4. Get unique video_ids and channel_ids
+  const videoIds = [...new Set(allDeals.map(d => d.video_id).filter(Boolean))];
+  const channelIds = [...new Set(allDeals.map(d => d.channel_id).filter(Boolean))];
 
-  // 3. Batch fetch videos
-  const { data: videos } = await supabase
-    .from('videos')
-    .select('video_id, title, published_at')
-    .in('video_id', videoIds);
+  // 5. Batch fetch videos and creators in parallel
+  const [{ data: videos }, { data: creators }] = await Promise.all([
+    supabase
+      .from('videos')
+      .select('video_id, title, published_at')
+      .in('video_id', videoIds),
+    supabase
+      .from('creators')
+      .select('channel_id, creator_name')
+      .in('channel_id', channelIds)
+  ]);
 
-  // 4. Batch fetch creators
-  const { data: creators } = await supabase
-    .from('creators')
-    .select('channel_id, creator_name')
-    .in('channel_id', channelIds);
-
-  // 5. Create lookup maps
+  // 6. Create lookup maps
   const videosMap = new Map((videos || []).map(v => [v.video_id, v]));
   const creatorsMap = new Map((creators || []).map(c => [c.channel_id, c]));
 
-  // 6. Map to display model
-  return deals.map(deal => mapToPromoDisplay(deal, videosMap, creatorsMap));
+  // 7. Map to display model
+  return allDeals.map(deal => mapToPromoDisplay(deal, videosMap, creatorsMap));
 }

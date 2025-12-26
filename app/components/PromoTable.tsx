@@ -53,6 +53,8 @@ export function PromoTable({ promos, onRowClick }: PromoTableProps) {
             {promos.map((promo) => {
               // Get the link - promo link takes priority, fallback to company link
               const promoLink = promo.link || promo.company.link;
+              const hasValidCode = promo.code && promo.code.trim() !== "" && promo.code.trim().toLowerCase() !== "not provided" && promo.code.trim().toLowerCase() !== "n/a" && !promo.code.trim().includes(" ");
+
 
               return (
                 <tr
@@ -84,6 +86,7 @@ export function PromoTable({ promos, onRowClick }: PromoTableProps) {
 
                   {/* Code */}
                   <td className="px-4 py-3">
+                    {hasValidCode ? (
                     <div className="flex items-center gap-2">
                       <code className="rounded bg-bg-deep/80 px-2 py-1 font-mono text-sm font-bold text-accent-primary">
                         {promo.code}
@@ -100,6 +103,9 @@ export function PromoTable({ promos, onRowClick }: PromoTableProps) {
                         )}
                       </button>
                     </div>
+                    ) : (
+                      <span className="text-sm text-text-muted/40">—</span>
+                    )}
                   </td>
 
                   {/* Offer */}

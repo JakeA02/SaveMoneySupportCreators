@@ -17,7 +17,7 @@ export function PromoActions({ code, companyName, promoLink }: PromoActionsProps
   const [copied, setCopied] = useState(false);
 
   // Check if code is valid (not empty, null, space, "Not Provided", or "n/a")
-  const hasValidCode = code && code.trim() !== "" && code.trim().toLowerCase() !== "not provided" && code.trim().toLowerCase() !== "n/a";
+  const hasValidCode = code && code.trim() !== "" && code.trim().toLowerCase() !== "not provided" && code.trim().toLowerCase() !== "n/a" && !code.trim().includes(" ");
 
   const handleCopy = () => {
     navigator.clipboard.writeText(code);

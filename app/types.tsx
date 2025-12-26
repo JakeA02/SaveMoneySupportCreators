@@ -26,6 +26,7 @@ export interface DbCreator {
   profile_url: string;
   genre: Genre;
   created_at: string;
+  profile_thumbnail: string | null;
 }
 
 export interface DbCompany {
@@ -85,6 +86,7 @@ export type PromoDisplayModel = {
       name: string;
       genre: Genre;
       profileURL: string;
+      profileThumbnail: string | null;
     };
   };
 };

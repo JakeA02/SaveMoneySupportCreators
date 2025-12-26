@@ -27,7 +27,7 @@ export function PromoCard({ promo, onClick }: PromoCardProps) {
   const logoURL = "https://img.logo.dev/name/" + promo.company.name.toLowerCase().replaceAll(" ", "") + "?token=pk_Qd7P2EDxSA2ZhTsPA52CaA"
   
   // Check if code is valid (not empty, null, space, or "Not Provided")
-  const hasValidCode = promo.code && promo.code.trim() !== "" && promo.code.trim().toLowerCase() !== "not provided" && promo.code.trim().toLowerCase() !== "n/a";
+  const hasValidCode = promo.code && promo.code.trim() !== "" && promo.code.trim().toLowerCase() !== "not provided" && promo.code.trim().toLowerCase() !== "n/a" && !promo.code.trim().includes(" ");
   return (
     <div
       onClick={() => onClick?.(promo)}
@@ -112,11 +112,21 @@ export function PromoCard({ promo, onClick }: PromoCardProps) {
       {/* Footer: Creator & Link */}
       <div className="flex items-center justify-between text-xs">
         <div className="flex items-center gap-2 text-text-muted">
-          <div className="h-5 w-5 rounded-full bg-accent-primary/20 flex items-center justify-center">
-            <span className="text-[10px] font-bold text-accent-primary">
-              {promo.video.creator.name.charAt(0)}
-            </span>
-          </div>
+          {promo.video.creator.profileThumbnail ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={promo.video.creator.profileThumbnail}
+              alt={promo.video.creator.name}
+              className="h-5 w-5 rounded-full object-cover"
+              referrerPolicy="no-referrer"
+            />
+          ) : (
+            <div className="h-5 w-5 rounded-full bg-accent-primary/20 flex items-center justify-center">
+              <span className="text-[10px] font-bold text-accent-primary">
+                {promo.video.creator.name.charAt(0)}
+              </span>
+            </div>
+          )}
           <span className="truncate max-w-[120px]">{promo.video.creator.name}</span>
         </div>
         {promoLink && (

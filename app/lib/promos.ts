@@ -36,6 +36,7 @@ function mapToPromoDisplay(
         name: creator?.creator_name || 'Unknown Creator',
         genre: deal.category?.toLowerCase() || 'other',
         profileURL: `https://youtube.com/channel/${deal.channel_id}`,
+        profileThumbnail: creator?.profile_thumbnail || null,
       },
     },
   };
@@ -69,7 +70,7 @@ export async function getLatestPromos(): Promise<PromoDisplayModel[]> {
   // 4. Batch fetch creators by channel_id
   const { data: creators } = await supabase
     .from('creators')
-    .select('channel_id, creator_name')
+    .select('channel_id, creator_name, profile_thumbnail')
     .in('channel_id', channelIds);
 
   // 5. Create lookup maps
@@ -105,7 +106,7 @@ export async function getPromoById(id: string): Promise<PromoDisplayModel | null
   // 3. Fetch the creator using deal's channel_id
   const { data: creator } = await supabase
     .from('creators')
-    .select('channel_id, creator_name')
+    .select('channel_id, creator_name, profile_thumbnail')
     .eq('channel_id', deal.channel_id)
     .single();
 
@@ -203,7 +204,7 @@ export async function searchPromos(query: string): Promise<PromoDisplayModel[]> 
       .in('video_id', videoIds),
     supabase
       .from('creators')
-      .select('channel_id, creator_name')
+      .select('channel_id, creator_name, profile_thumbnail')
       .in('channel_id', channelIds)
   ]);
 

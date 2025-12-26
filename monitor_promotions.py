@@ -8,14 +8,15 @@ from datetime import datetime, timezone
 from time import mktime
 
 # --- CONFIGURATION ---
+# Use port 6543 (Supabase pooler) for GitHub Actions compatibility
 DB_PARAMS = {
     "dbname": os.environ["DB_NAME"],
     "user": os.environ["DB_USER"],
     "password": os.environ["DB_PASSWORD"],
     "host": os.environ["DB_HOST"],
-    "port": "5432",
+    "port": "6543",
     "connect_timeout": 10,
-    "sslmode": "require"  # Required for Supabase
+    "sslmode": "require"
 }
 
 # Initialize OpenAI client

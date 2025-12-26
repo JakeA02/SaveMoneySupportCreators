@@ -1,8 +1,10 @@
 import os
 import sys
 import json
+import re
 import feedparser
 import psycopg2
+import requests
 from openai import OpenAI
 from datetime import datetime, timezone
 from time import mktime
@@ -17,11 +19,68 @@ DB_PARAMS = {
     "port": "6543",
     "connect_timeout": 10,
     "sslmode": "require"
-    "pool_mode": "transaction"
 }
 
-# Initialize OpenAI client
+# Initialize clients
 client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+YOUTUBE_API_KEY = os.environ.get("YOUTUBE_API_KEY", "")
+
+# Minimum video duration in seconds (skip shorts/very short videos)
+MIN_DURATION_SECONDS = 240  # 4 minutes
+
+
+def parse_iso8601_duration(duration: str) -> int:
+    """Parse ISO 8601 duration (e.g., 'PT4M13S') to seconds."""
+    match = re.match(r'PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?', duration)
+    if not match:
+        return 0
+    hours = int(match.group(1) or 0)
+    minutes = int(match.group(2) or 0)
+    seconds = int(match.group(3) or 0)
+    return hours * 3600 + minutes * 60 + seconds
+
+
+def get_video_details(video_id: str) -> dict:
+    """Fetch video details from YouTube Data API. Returns duration and channel title."""
+    result = {"duration": 9999, "channel_title": None}
+    
+    if not YOUTUBE_API_KEY:
+        return result
+    
+    try:
+        url = f"https://www.googleapis.com/youtube/v3/videos?id={video_id}&part=contentDetails,snippet&key={YOUTUBE_API_KEY}"
+        resp = requests.get(url, timeout=5)
+        data = resp.json()
+        
+        if "items" in data and len(data["items"]) > 0:
+            item = data["items"][0]
+            duration_str = item["contentDetails"]["duration"]
+            result["duration"] = parse_iso8601_duration(duration_str)
+            result["channel_title"] = item["snippet"].get("channelTitle")
+    except Exception as e:
+        print(f"  --> Error fetching video details: {e}")
+    
+    return result
+
+
+def get_channel_username(channel_id: str) -> str:
+    """Fetch channel's @username from YouTube Data API."""
+    if not YOUTUBE_API_KEY:
+        return None
+    
+    try:
+        url = f"https://www.googleapis.com/youtube/v3/channels?id={channel_id}&part=snippet&key={YOUTUBE_API_KEY}"
+        resp = requests.get(url, timeout=5)
+        data = resp.json()
+        
+        if "items" in data and len(data["items"]) > 0:
+            custom_url = data["items"][0]["snippet"].get("customUrl", "")
+            # customUrl is like "@username", return without the @
+            return custom_url.lstrip("@") if custom_url else None
+    except Exception as e:
+        print(f"  --> Error fetching channel username: {e}")
+    
+    return None
 
 SYSTEM_PROMPT = """Extract YouTube brand deals/discounts into a JSON list when the user provides a youtube video description. 
 Rules:
@@ -91,15 +150,18 @@ def extract_deals_from_video(description: str, title: str) -> list:
         print(f"  --> Error extracting deals: {e}")
         return []
 
-def insert_video(cur, video_id: str, channel_id: str, title: str, description: str, published_at: str):
+def insert_video(cur, video_id: str, channel_id: str, title: str, description: str, 
+                 published_at: str, creator_name: str = None, creator_username: str = None):
     """Inserts or updates a video in the videos table."""
     cur.execute("""
-        INSERT INTO videos (video_id, channel_id, title, description, published_at)
-        VALUES (%s, %s, %s, %s, %s)
+        INSERT INTO videos (video_id, channel_id, title, description, published_at, creator_name, creator_username)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
         ON CONFLICT (video_id) DO UPDATE SET
             title = EXCLUDED.title,
-            description = EXCLUDED.description
-    """, (video_id, channel_id, title, description, published_at))
+            description = EXCLUDED.description,
+            creator_name = COALESCE(EXCLUDED.creator_name, videos.creator_name),
+            creator_username = COALESCE(EXCLUDED.creator_username, videos.creator_username)
+    """, (video_id, channel_id, title, description, published_at, creator_name, creator_username))
 
 def insert_deals(cur, deals: list, video_id: str, channel_id: str):
     """Inserts deals, replacing old ones for the same company/code to keep them fresh."""
@@ -161,6 +223,9 @@ def check_feeds():
                 print(f"  Error fetching feed for {channel_id}: {feed.bozo_exception}")
                 continue
 
+            # Fetch channel username once per channel (cache it)
+            creator_username = get_channel_username(channel_id)
+
             # Track the newest video date found in this specific batch
             batch_max_date = last_checked_at
 
@@ -177,10 +242,15 @@ def check_feeds():
                 if published_time <= last_checked_at:
                     continue
 
-                # --- 2. SHORTS CHECK ---
+                # --- 2. SHORTS/DURATION CHECK ---
                 title = getattr(entry, 'title', 'Untitled')
                 if "#shorts" in title.lower():
-                    # print(f"  Skipping Short: {title[:30]}...") 
+                    continue
+                
+                # Fetch video details (duration + channel title for creator_name)
+                video_details = get_video_details(video_id)
+                if video_details["duration"] < MIN_DURATION_SECONDS:
+                    print(f"  Skipping short video ({video_details['duration']}s): {title[:40]}...")
                     continue
 
                 # We have a valid new video!
@@ -188,9 +258,13 @@ def check_feeds():
                 total_new_videos += 1
                 
                 description = getattr(entry, 'summary', '')
+                
+                # Use channel title from API if available, fallback to DB value
+                video_creator_name = video_details.get("channel_title") or creator_name
 
-                # Update DB
-                insert_video(cur, video_id, channel_id, title, description, published_time)
+                # Update DB with creator info
+                insert_video(cur, video_id, channel_id, title, description, published_time,
+                            creator_name=video_creator_name, creator_username=creator_username)
                 
                 # Extract Deals
                 deals = extract_deals_from_video(description, title)

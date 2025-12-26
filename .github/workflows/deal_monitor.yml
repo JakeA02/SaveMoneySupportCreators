@@ -32,5 +32,6 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_HOST: ${{ secrets.DB_HOST }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: |
           python monitor_promotions.py

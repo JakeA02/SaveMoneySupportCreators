@@ -83,6 +83,14 @@ export function SearchPageClient({ initialPromos, initialQuery }: SearchPageClie
                 </div>
               )}
             </div>
+
+            {/* About link */}
+            <Link
+              href="/about"
+              className="shrink-0 text-sm text-text-muted transition-colors hover:text-accent-primary"
+            >
+              About
+            </Link>
           </div>
         </div>
       </header>

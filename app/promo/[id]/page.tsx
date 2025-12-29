@@ -45,6 +45,13 @@ export default async function PromoPage({ params }: PageProps) {
                 <span className="text-accent-success">Support</span>
               </h1>
             </Link>
+            <div className="flex-1" />
+            <Link
+              href="/about"
+              className="shrink-0 text-sm text-text-muted transition-colors hover:text-accent-primary"
+            >
+              About
+            </Link>
           </div>
         </div>
       </header>

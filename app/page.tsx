@@ -28,16 +28,16 @@ export default function Home() {
         {/* Gradient orbs */}
         <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-accent-primary/5 blur-3xl" />
         <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-accent-success/5 blur-3xl" />
-        
+
         {/* Grid pattern */}
-        <div 
+        <div
           className="absolute inset-0 opacity-[0.02]"
           style={{
             backgroundImage: `
               linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
               linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
             `,
-            backgroundSize: '60px 60px'
+            backgroundSize: "60px 60px",
           }}
         />
       </div>
@@ -53,35 +53,38 @@ export default function Home() {
               <span className="text-accent-success">Support</span> Creators
             </h1>
             <p className="mx-auto max-w-md text-base text-text-muted sm:text-lg">
-              Find promo codes from YouTubers. 
-              Save money while supporting creators.
+              Find promo codes from YouTubers. Save money while supporting
+              creators.
             </p>
           </div>
 
           {/* Search Section */}
           <form onSubmit={handleSearch} className="animate-fade-in-up-delay-1">
-            <div 
+            <div
               className={`
                 relative rounded-2xl bg-bg-surface transition-all duration-300
-                ${isFocused 
-                  ? 'shadow-[0_0_0_2px_var(--accent-primary),0_8px_40px_-12px_var(--accent-primary-glow)]' 
-                  : 'shadow-[0_0_0_1px_var(--border-subtle),0_4px_24px_-8px_rgba(0,0,0,0.5)]'
+                ${
+                  isFocused
+                    ? "shadow-[0_0_0_2px_var(--accent-primary),0_8px_40px_-12px_var(--accent-primary-glow)]"
+                    : "shadow-[0_0_0_1px_var(--border-subtle),0_4px_24px_-8px_rgba(0,0,0,0.5)]"
                 }
               `}
             >
               {/* Search Icon */}
               <div className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2">
-                <svg 
-                  className={`h-5 w-5 transition-colors duration-200 ${isFocused ? 'text-accent-primary' : 'text-text-muted'}`}
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  stroke="currentColor" 
+                <svg
+                  className={`h-5 w-5 transition-colors duration-200 ${
+                    isFocused ? "text-accent-primary" : "text-text-muted"
+                  }`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                   strokeWidth={2}
                 >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" 
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                   />
                 </svg>
               </div>
@@ -94,7 +97,7 @@ export default function Home() {
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
                 placeholder="Search by company, creator, or category..."
-                className="w-full bg-transparent py-5 pl-14 pr-32 text-lg text-text-primary placeholder:text-text-muted/60 focus:outline-none sm:py-6 sm:text-xl"
+                className="w-full rounded-2xl border-none bg-transparent py-5 pl-14 pr-32 text-lg text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:ring-0 sm:py-6 sm:text-xl"
               />
 
               {/* Search Button */}
@@ -110,16 +113,18 @@ export default function Home() {
           {/* Quick search suggestions */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-2 animate-fade-in-up-delay-2">
             <span className="text-sm text-text-muted">Try:</span>
-            {["NordVPN", "Squarespace", "Gaming", "Beauty", "Tech"].map((tag, index) => (
-              <button
-                key={tag}
-                onClick={() => handleQuickSearch(tag)}
-                className="rounded-full border border-border-subtle bg-bg-surface/50 px-4 py-1.5 text-sm text-text-muted transition-all duration-200 hover:border-accent-primary/40 hover:bg-accent-primary/10 hover:text-text-primary"
-                style={{ animationDelay: `${0.3 + index * 0.05}s` }}
-              >
-                {tag}
-              </button>
-            ))}
+            {["NordVPN", "Squarespace", "Gaming", "Beauty", "Tech"].map(
+              (tag, index) => (
+                <button
+                  key={tag}
+                  onClick={() => handleQuickSearch(tag)}
+                  className="rounded-full border border-border-subtle bg-bg-surface/50 px-4 py-1.5 text-sm text-text-muted transition-all duration-200 hover:border-accent-primary/40 hover:bg-accent-primary/10 hover:text-text-primary"
+                  style={{ animationDelay: `${0.3 + index * 0.05}s` }}
+                >
+                  {tag}
+                </button>
+              )
+            )}
           </div>
 
           {/* Stats preview */}
@@ -129,7 +134,7 @@ export default function Home() {
               { value: "2K+", label: "Creators" },
               { value: "500+", label: "Brands" },
             ].map((stat) => (
-              <div 
+              <div
                 key={stat.label}
                 className="rounded-xl border border-border-subtle bg-bg-surface/30 p-4 text-center backdrop-blur-sm"
               >
@@ -145,10 +150,15 @@ export default function Home() {
         </div>
 
         {/* Footer hint */}
-        <div className="absolute bottom-8 left-0 right-0 text-center">
-          <p className="text-xs text-text-muted/50">
-            Codes sourced directly from YouTube videos
-          </p>
+        <div className="absolute bottom-8 left-0 right-0 flex items-center justify-center gap-3 text-xs text-text-muted/50">
+          <span>Codes sourced directly from YouTube videos</span>
+          <span className="text-text-muted/30">·</span>
+          <a
+            href="/about"
+            className="text-text-muted/50 transition-colors hover:text-accent-primary"
+          >
+            About
+          </a>
         </div>
       </main>
     </div>
